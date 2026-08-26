@@ -14,10 +14,16 @@ $orange: #d56b43;
 .dashboard-sidebar {
   background: #f1f5f1;
   border-right: 1px solid $line;
+  box-sizing: border-box;
   display: flex;
   flex: 0 0 252px;
   flex-direction: column;
+  height: 100vh;
+  max-height: 100vh;
+  overflow-y: auto;
   padding: 30px 18px 22px;
+  position: sticky;
+  top: 0;
 }
 
 .sidebar-brand {
@@ -135,8 +141,17 @@ $orange: #d56b43;
 
 .dashboard-main {
   flex: 1;
+  min-width: 0;
   max-width: 1450px;
   padding: 48px clamp(28px, 6vw, 92px);
+}
+
+.profile-container.embedded {
+  max-width: 680px;
+}
+
+.profile-container.embedded > .app-logo {
+  display: none;
 }
 .dashboard-header,
 .section-heading {
@@ -329,7 +344,11 @@ h2 {
   .dashboard-sidebar {
     border-bottom: 1px solid $line;
     border-right: 0;
+    height: auto;
+    max-height: none;
+    overflow-y: visible;
     padding: 18px 16px;
+    position: static;
   }
   .sidebar-brand {
     padding: 0 0 18px;

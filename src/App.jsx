@@ -33,7 +33,7 @@ const AppContent = () => {
                 path="/contracts"
                 element={<Dashboard view="contracts" />}
               />
-              <Route path="/settings" element={<Profile />} />
+              <Route path="/settings" element={<Dashboard view="settings" />} />
               <Route path="/profile" element={<Profile />} />
             </Routes>
           </Suspense>

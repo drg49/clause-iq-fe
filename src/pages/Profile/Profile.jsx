@@ -16,7 +16,7 @@ import Logo from "../../components/Logo/Logo";
 
 const { TOP_CENTER } = TOAST_POSITIONS;
 
-const Profile = () => {
+const Profile = ({ embedded = false }) => {
   const { user, setUser, setIsLoggedIn } = useAuth();
   const [isSaving, setIsSaving] = useState(false);
 
@@ -73,8 +73,8 @@ const Profile = () => {
   };
 
   return (
-    <div className="profile-container">
-      <Logo />
+    <div className={`profile-container${embedded ? " embedded" : ""}`}>
+      {!embedded && <Logo />}
       <div
         style={{
           display: "flex",

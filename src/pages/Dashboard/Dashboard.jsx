@@ -10,6 +10,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useAuth } from "../../context/AuthContext";
 import Logo from "../../components/Logo/Logo";
+import Profile from "../Profile/Profile";
 import "./Dashboard.scss";
 
 const contracts = [
@@ -54,6 +55,7 @@ const Dashboard = ({ view = "dashboard" }) => {
   const { user } = useAuth();
   const firstName = user?.username?.split(" ")[0] || "Alex";
   const isContractsView = view === "contracts";
+  const isSettingsView = view === "settings";
 
   return (
     <div className="dashboard-layout">
@@ -101,10 +103,18 @@ const Dashboard = ({ view = "dashboard" }) => {
         <header className="dashboard-header">
           <div>
             <p className="eyebrow">
-              {isContractsView ? "CONTRACTS" : "OVERVIEW"}
+              {isSettingsView
+                ? "SETTINGS"
+                : isContractsView
+                  ? "CONTRACTS"
+                  : "OVERVIEW"}
             </p>
             <h1>
-              {isContractsView ? "All contracts" : `Good morning, ${firstName}`}
+              {isSettingsView
+                ? "Account settings"
+                : isContractsView
+                  ? "All contracts"
+                  : `Good morning, ${firstName}`}
             </h1>
           </div>
           <button
@@ -116,96 +126,102 @@ const Dashboard = ({ view = "dashboard" }) => {
           </button>
         </header>
 
-        {!isContractsView && (
-          <section className="welcome-panel">
-            <div>
-              <span className="panel-label">YOUR LEGAL WORKSPACE</span>
-              <h2>Know what you&apos;re signing.</h2>
-              <p>
-                Upload a contract and let ClauseIQ surface risk, missing
-                protections, and negotiation opportunities.
-              </p>
+        {isSettingsView ? (
+          <Profile embedded />
+        ) : (
+          !isContractsView && (
+            <section className="welcome-panel">
+              <div>
+                <span className="panel-label">YOUR LEGAL WORKSPACE</span>
+                <h2>Know what you&apos;re signing.</h2>
+                <p>
+                  Upload a contract and let ClauseIQ surface risk, missing
+                  protections, and negotiation opportunities.
+                </p>
+                <button
+                  type="button"
+                  className="panel-action"
+                  onClick={() => navigate("/contracts")}
+                >
+                  Start an analysis{" "}
+                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                </button>
+              </div>
+              <div className="panel-mark">
+                <FontAwesomeIcon icon={faFileContract} />
+              </div>
+            </section>
+          )
+        )}
+
+        {!isSettingsView && (
+          <section className="contracts-section">
+            <div className="section-heading">
+              <div>
+                <p className="eyebrow">YOUR LIBRARY</p>
+                <h2>
+                  {isContractsView
+                    ? "Contract library"
+                    : "Recently analyzed contracts"}
+                </h2>
+              </div>
               <button
                 type="button"
-                className="panel-action"
+                className="view-all"
                 onClick={() => navigate("/contracts")}
               >
-                Start an analysis{" "}
-                <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
+                View all <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
               </button>
             </div>
-            <div className="panel-mark">
-              <FontAwesomeIcon icon={faFileContract} />
+            <div className="contract-table-wrap">
+              <table className="contract-table">
+                <thead>
+                  <tr>
+                    <th>Contract name</th>
+                    <th>Date analyzed</th>
+                    <th>Overall risk</th>
+                    <th>Findings</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contracts.map((contract) => (
+                    <tr key={contract.name}>
+                      <td>
+                        <div className="contract-name">
+                          <span className="document-icon">
+                            <FontAwesomeIcon icon={faFileContract} />
+                          </span>
+                          <strong>{contract.name}</strong>
+                        </div>
+                      </td>
+                      <td>{contract.date}</td>
+                      <td>
+                        <span
+                          className={`risk risk-${contract.risk.toLowerCase()}`}
+                        >
+                          <i />
+                          {contract.risk}
+                        </span>
+                      </td>
+                      <td>
+                        {contract.findings}{" "}
+                        {contract.findings === 1 ? "finding" : "findings"}
+                      </td>
+                      <td>
+                        <span
+                          className={`status ${contract.status === "Needs review" ? "status-review" : ""}`}
+                        >
+                          {contract.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </section>
         )}
-
-        <section className="contracts-section">
-          <div className="section-heading">
-            <div>
-              <p className="eyebrow">YOUR LIBRARY</p>
-              <h2>
-                {isContractsView
-                  ? "Contract library"
-                  : "Recently analyzed contracts"}
-              </h2>
-            </div>
-            <button
-              type="button"
-              className="view-all"
-              onClick={() => navigate("/contracts")}
-            >
-              View all <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-            </button>
-          </div>
-          <div className="contract-table-wrap">
-            <table className="contract-table">
-              <thead>
-                <tr>
-                  <th>Contract name</th>
-                  <th>Date analyzed</th>
-                  <th>Overall risk</th>
-                  <th>Findings</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {contracts.map((contract) => (
-                  <tr key={contract.name}>
-                    <td>
-                      <div className="contract-name">
-                        <span className="document-icon">
-                          <FontAwesomeIcon icon={faFileContract} />
-                        </span>
-                        <strong>{contract.name}</strong>
-                      </div>
-                    </td>
-                    <td>{contract.date}</td>
-                    <td>
-                      <span
-                        className={`risk risk-${contract.risk.toLowerCase()}`}
-                      >
-                        <i />
-                        {contract.risk}
-                      </span>
-                    </td>
-                    <td>
-                      {contract.findings}{" "}
-                      {contract.findings === 1 ? "finding" : "findings"}
-                    </td>
-                    <td>
-                      <span
-                        className={`status ${contract.status === "Needs review" ? "status-review" : ""}`}
-                      >
-                        {contract.status}
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </section>
       </main>
     </div>
   );
