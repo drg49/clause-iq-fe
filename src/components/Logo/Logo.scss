@@ -1,3 +1,16 @@
+.app-logo {
+  align-items: center;
+  display: flex;
+
+  h1 {
+    color: #183b3d;
+    font-size: 1.55rem;
+    letter-spacing: -0.04em;
+    margin: 0;
+
+    span { color: #d56b43; }
+  }
+}
 @import url('https://fonts.googleapis.com/css2?family=Dai+Banna+SIL:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap');
 
 .app-logo {
@@ -8,22 +21,15 @@
 
   h1 {
     font-family: 'Dai Banna SIL', serif;
-    font-size: 50px;
+    font-size: 1.55rem;
+    letter-spacing: -0.04em;
     margin: 0px;
-    color: rgb(99, 99, 255);
+    color: #183b3d;
 
-    // Smaller font sizes for smaller screens
+    span { color: #d56b43; }
+
     @media (max-width: 400px) {
-      font-size: 45px;
-    }
-    @media (max-width: 370px) {
-      font-size: 40px;
-    }
-    @media (max-width: 330px) {
-      font-size: 35px;
-    }
-    @media (max-width: 300px) {
-      font-size: 30px;
+      font-size: 1.35rem;
     }
   }
 }

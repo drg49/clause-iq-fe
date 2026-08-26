@@ -6,9 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ToastContainer } from "react-toastify";
 import { AuthProvider, useAuth } from "./context/AuthContext";
-import { CameraProvider } from "./context/CameraContext";
 import "react-toastify/dist/ReactToastify.css";
-import BottomNav from "./components/BottomNav/BottomNav";
 
 const spinner = (
   <div className="spinner-wrapper">
@@ -16,10 +14,9 @@ const spinner = (
   </div>
 );
 
-const Home = lazy(() => import("./pages/Home/Home"));
+const Dashboard = lazy(() => import("./pages/Dashboard/Dashboard"));
 const Auth = lazy(() => import("./pages/Auth/Auth"));
 const Profile = lazy(() => import("./pages/Profile/Profile"));
-const Capture = lazy(() => import("./pages/Capture/Capture"));
 
 const AppContent = () => {
   const { isLoggedIn } = useAuth();
@@ -27,17 +24,19 @@ const AppContent = () => {
   return (
     <>
       {isLoggedIn && (
-        <div className="container">
-          <BottomNav />
-          <div className="main">
-            <Suspense fallback={spinner}>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/capture" element={<Capture />} />
-                <Route path="/profile" element={<Profile />} />
-              </Routes>
-            </Suspense>
-          </div>
+        <div className="app-shell">
+          <Suspense fallback={spinner}>
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route
+                path="/contracts"
+                element={<Dashboard view="contracts" />}
+              />
+              <Route path="/settings" element={<Profile />} />
+              <Route path="/profile" element={<Profile />} />
+            </Routes>
+          </Suspense>
         </div>
       )}
       {isLoggedIn === false && <Auth />}
@@ -58,9 +57,7 @@ const App = () => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthProvider>
-        <CameraProvider>
-          <AppContent />
-        </CameraProvider>
+        <AppContent />
       </AuthProvider>
     </ThemeProvider>
   );
