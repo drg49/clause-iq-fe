@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import Panel from "../../components/Panel/Panel";
 import Login from "./Login";
 import { AUTH_STATE } from "../../utils/constants";

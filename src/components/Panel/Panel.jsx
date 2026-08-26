@@ -1,7 +1,6 @@
-import React from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
-import './Panel.scss';
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import "./Panel.scss";
 
 const closeIcon = <FontAwesomeIcon icon={faClose} size="sm" color="white" />;
 
@@ -19,7 +18,7 @@ const Panel = ({ children, id, size, closable, fixedHeight }) => {
   return (
     <div
       id={id}
-      className={`app-panel ${size} ${fixedHeight && 'fixed-height'}`}
+      className={`app-panel ${size} ${fixedHeight && "fixed-height"}`}
     >
       <header>
         {closable && <button className="close-btn">{closeIcon}</button>}
