@@ -133,14 +133,16 @@ const Dashboard = ({ view = "dashboard" }) => {
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
-          <Button
-            type="button"
-            className="analyze-button"
-            onClick={() => navigate("/contracts")}
-            startIcon={<FontAwesomeIcon icon={faPlus} />}
-          >
-            Analyze contract
-          </Button>
+          {!isSettingsView && (
+            <Button
+              type="button"
+              className="analyze-button"
+              onClick={() => navigate("/contracts")}
+              startIcon={<FontAwesomeIcon icon={faPlus} />}
+            >
+              Analyze contract
+            </Button>
+          )}
         </header>
 
         {isSettingsView ? (
@@ -159,7 +161,6 @@ const Dashboard = ({ view = "dashboard" }) => {
                   type="button"
                   className="panel-action"
                   onClick={() => navigate("/contracts")}
-                  endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
                 >
                   Start an analysis
                 </Button>
