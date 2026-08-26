@@ -1,6 +1,11 @@
 import React from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import {
   faArrowUpRightFromSquare,
   faChartLine,
@@ -64,28 +69,39 @@ const Dashboard = ({ view = "dashboard" }) => {
           <Logo />
         </div>
         <div className="sidebar-section-label">Workspace</div>
-        <nav className="sidebar-nav" aria-label="Main navigation">
+        <List
+          className="sidebar-nav"
+          component="nav"
+          aria-label="Main navigation"
+          disablePadding
+        >
           {navigation.map((item) => (
-            <NavLink
+            <ListItemButton
+              component={NavLink}
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
                 `sidebar-link${isActive ? " active" : ""}`
               }
             >
-              <FontAwesomeIcon icon={item.icon} />
-              <span>{item.label}</span>
-            </NavLink>
+              <ListItemIcon>
+                <FontAwesomeIcon icon={item.icon} />
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
           ))}
-        </nav>
+        </List>
         <div className="sidebar-bottom">
           <div className="sidebar-tip">
             <span className="tip-kicker">CLAUSEIQ INSIGHT</span>
             <strong>Turn legal language into clear decisions.</strong>
-            <button type="button" onClick={() => navigate("/contracts")}>
-              Explore contracts{" "}
-              <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-            </button>
+            <Button
+              type="button"
+              onClick={() => navigate("/contracts")}
+              endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
+            >
+              Explore contracts
+            </Button>
           </div>
           <div className="sidebar-user">
             <div className="user-avatar">
@@ -117,13 +133,14 @@ const Dashboard = ({ view = "dashboard" }) => {
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
-          <button
+          <Button
             type="button"
             className="analyze-button"
             onClick={() => navigate("/contracts")}
+            startIcon={<FontAwesomeIcon icon={faPlus} />}
           >
-            <FontAwesomeIcon icon={faPlus} /> Analyze contract
-          </button>
+            Analyze contract
+          </Button>
         </header>
 
         {isSettingsView ? (
@@ -138,14 +155,14 @@ const Dashboard = ({ view = "dashboard" }) => {
                   Upload a contract and let ClauseIQ surface risk, missing
                   protections, and negotiation opportunities.
                 </p>
-                <button
+                <Button
                   type="button"
                   className="panel-action"
                   onClick={() => navigate("/contracts")}
+                  endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
                 >
-                  Start an analysis{" "}
-                  <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-                </button>
+                  Start an analysis
+                </Button>
               </div>
               <div className="panel-mark">
                 <FontAwesomeIcon icon={faFileContract} />
@@ -165,13 +182,14 @@ const Dashboard = ({ view = "dashboard" }) => {
                     : "Recently analyzed contracts"}
                 </h2>
               </div>
-              <button
+              <Button
                 type="button"
                 className="view-all"
                 onClick={() => navigate("/contracts")}
+                endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
               >
-                View all <FontAwesomeIcon icon={faArrowUpRightFromSquare} />
-              </button>
+                View all
+              </Button>
             </div>
             <div className="contract-table-wrap">
               <table className="contract-table">
