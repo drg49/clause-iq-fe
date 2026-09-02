@@ -167,7 +167,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
               />
               <Button
                 type="button"
-                className="analyze-button"
+                variant="contained"
                 disabled={isUploading}
                 onClick={openUploadPicker}
                 startIcon={<FontAwesomeIcon icon={faPlus} />}
