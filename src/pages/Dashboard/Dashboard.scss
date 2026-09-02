@@ -193,13 +193,15 @@ h2 {
   letter-spacing: -0.035em;
   margin: 0;
 }
-.analyze-button,
-.panel-action {
+.analyze-button {
   border: 0;
   cursor: pointer;
   font-size: 0.82rem;
   font-weight: 700;
   text-transform: none;
+}
+.contract-file-input {
+  display: none;
 }
 .analyze-button {
   background: $orange;
@@ -232,12 +234,6 @@ h2 {
   margin-bottom: 20px;
   max-width: 500px;
 }
-.panel-action {
-  background: transparent;
-  color: $ink;
-  padding: 0;
-}
-.panel-action svg,
 .view-all svg {
   color: $orange;
   font-size: 0.7rem;

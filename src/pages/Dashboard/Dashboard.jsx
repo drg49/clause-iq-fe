@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Button from '@mui/material/Button';
@@ -16,6 +16,8 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import Logo from '../../components/Logo/Logo';
 import Profile from '../Profile/Profile';
+import { uploadContract } from '../../api/contracts';
+import { notifyError, notifySuccess } from '../../utils/toastMethods';
 import './Dashboard.scss';
 
 const contracts = [
@@ -58,9 +60,30 @@ const navigation = [
 const Dashboard = ({ view = 'dashboard' }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const fileInputRef = useRef(null);
+  const [isUploading, setIsUploading] = useState(false);
   const firstName = user?.firstName || 'Alex';
   const isContractsView = view === 'contracts';
   const isSettingsView = view === 'settings';
+
+  const handleUpload = async (event) => {
+    const file = event.target.files?.[0];
+    event.target.value = '';
+
+    if (!file) return;
+
+    setIsUploading(true);
+    try {
+      await uploadContract(file);
+      notifySuccess(`${file.name} uploaded successfully.`);
+    } catch (error) {
+      notifyError(error.message || 'Unable to upload the contract.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const openUploadPicker = () => fileInputRef.current?.click();
 
   return (
     <div className="dashboard-layout">
@@ -133,15 +156,25 @@ const Dashboard = ({ view = 'dashboard' }) => {
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
-          {!isSettingsView && (
-            <Button
-              type="button"
-              className="analyze-button"
-              onClick={() => navigate('/contracts')}
-              startIcon={<FontAwesomeIcon icon={faPlus} />}
-            >
-              Analyze contract
-            </Button>
+          {isContractsView && (
+            <>
+              <input
+                ref={fileInputRef}
+                accept=".pdf,.doc,.docx"
+                className="contract-file-input"
+                onChange={handleUpload}
+                type="file"
+              />
+              <Button
+                type="button"
+                className="analyze-button"
+                disabled={isUploading}
+                onClick={openUploadPicker}
+                startIcon={<FontAwesomeIcon icon={faPlus} />}
+              >
+                {isUploading ? 'Uploading...' : 'Upload contract'}
+              </Button>
+            </>
           )}
         </header>
 
@@ -157,12 +190,8 @@ const Dashboard = ({ view = 'dashboard' }) => {
                   Upload a contract and let ClauseIQ surface risk, missing
                   protections, and negotiation opportunities.
                 </p>
-                <Button
-                  type="button"
-                  className="panel-action"
-                  onClick={() => navigate('/contracts')}
-                >
-                  Start an analysis
+                <Button type="button" onClick={() => navigate('/contracts')}>
+                  Begin analysis
                 </Button>
               </div>
               <div className="panel-mark">
