@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import * as api from "../../api/authentication";
-import Form from "../../components/Form/Form";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { notifyError, notifySuccess } from "../../utils/toastMethods";
-import { parseError } from "../../utils/helperMethods";
-import { TOAST_POSITIONS, countries } from "../../utils/constants";
-import Logo from "../../components/Logo/Logo";
+import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
+import * as api from '../../api/authentication';
+import Form from '../../components/Form/Form';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { notifyError, notifySuccess } from '../../utils/toastMethods';
+import { parseError } from '../../utils/helperMethods';
+import { TOAST_POSITIONS, countries } from '../../utils/constants';
+import Logo from '../../components/Logo/Logo';
 
 const { TOP_CENTER } = TOAST_POSITIONS;
 
@@ -21,11 +21,12 @@ const Profile = ({ embedded = false }) => {
   const [isSaving, setIsSaving] = useState(false);
 
   const [profileForm, setProfileForm] = useState({
-    username: user?.username || "",
-    email: user?.email || "",
-    phone_number: user?.phoneNumber || "",
-    location: user?.location || "",
-    bio: user?.bio || "",
+    first_name: user?.firstName || '',
+    last_name: user?.lastName || '',
+    email: user?.email || '',
+    phone_number: user?.phoneNumber || '',
+    location: user?.location || '',
+    bio: user?.bio || '',
   });
 
   const handleChange = (e) => {
@@ -40,8 +41,12 @@ const Profile = ({ embedded = false }) => {
     e?.preventDefault?.();
     if (isSaving) return;
 
-    if (!profileForm.username.trim() || !profileForm.email.trim()) {
-      notifyError("Username and Email are required.", TOP_CENTER);
+    if (
+      !profileForm.first_name.trim() ||
+      !profileForm.last_name.trim() ||
+      !profileForm.email.trim()
+    ) {
+      notifyError('First Name, Last Name, and Email are required.', TOP_CENTER);
       return;
     }
 
@@ -54,7 +59,7 @@ const Profile = ({ embedded = false }) => {
       };
 
       await api.updateUser(payload);
-      notifySuccess("Profile updated successfully!", TOP_CENTER);
+      notifySuccess('Profile updated successfully!', TOP_CENTER);
     } catch (err) {
       notifyError(parseError(err), TOP_CENTER);
     } finally {
@@ -73,13 +78,13 @@ const Profile = ({ embedded = false }) => {
   };
 
   return (
-    <div className={`profile-container${embedded ? " embedded" : ""}`}>
+    <div className={`profile-container${embedded ? ' embedded' : ''}`}>
       {!embedded && <Logo />}
       <div
         style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
         }}
       >
         <h2>Your Profile</h2>
@@ -90,11 +95,23 @@ const Profile = ({ embedded = false }) => {
       <Form id="profile-form" onSubmit={handleSubmit}>
         <TextField
           type="text"
-          name="username"
-          label="Username *"
-          placeholder="Username"
+          name="first_name"
+          label="First Name *"
+          placeholder="First Name"
           onChange={handleChange}
-          value={profileForm.username}
+          value={profileForm.first_name}
+          inputProps={{ maxLength: 25 }}
+          fullWidth
+          margin="normal"
+        />
+
+        <TextField
+          type="text"
+          name="last_name"
+          label="Last Name *"
+          placeholder="Last Name"
+          onChange={handleChange}
+          value={profileForm.last_name}
           inputProps={{ maxLength: 25 }}
           fullWidth
           margin="normal"
@@ -166,7 +183,7 @@ const Profile = ({ embedded = false }) => {
           {isSaving ? (
             <CircularProgress size={18} color="inherit" />
           ) : (
-            "Save Changes"
+            'Save Changes'
           )}
         </Button>
       </Form>

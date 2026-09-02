@@ -1,21 +1,21 @@
-import { useState } from "react";
+import { useState } from 'react';
 
-import Form from "../../components/Form/Form";
-import TextField from "@mui/material/TextField";
-import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import Button from "@mui/material/Button";
-import CircularProgress from "@mui/material/CircularProgress";
-import Typography from "@mui/material/Typography";
+import Form from '../../components/Form/Form';
+import TextField from '@mui/material/TextField';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
 
-import * as api from "../../api/authentication";
-import { useAuth } from "../../context/AuthContext";
-import { formContainsEmptyValues } from "../../utils/validation";
-import { parseError } from "../../utils/helperMethods";
-import { notifyError } from "../../utils/toastMethods";
-import { TOAST_POSITIONS, countries } from "../../utils/constants";
+import * as api from '../../api/authentication';
+import { useAuth } from '../../context/AuthContext';
+import { formContainsEmptyValues } from '../../utils/validation';
+import { parseError } from '../../utils/helperMethods';
+import { notifyError } from '../../utils/toastMethods';
+import { TOAST_POSITIONS, countries } from '../../utils/constants';
 
 const { TOP_CENTER } = TOAST_POSITIONS;
 
@@ -25,14 +25,15 @@ const Register = ({ isLoading, setIsLoading }) => {
 
   const [registerForm, setRegisterForm] = useState({
     // Step 1 Fields
-    username: "",
-    email: "",
-    password: "",
+    first_name: '',
+    last_name: '',
+    email: '',
+    password: '',
 
     // Step 2 Fields
-    phone_number: "",
-    bio: "",
-    location: "United States",
+    phone_number: '',
+    bio: '',
+    location: 'United States',
   });
 
   const handleChange = (e) => {
@@ -46,7 +47,8 @@ const Register = ({ isLoading, setIsLoading }) => {
 
   // Step 1 Data Normalization
   const normalizeAuthData = (form) => ({
-    username: form.username.trim(),
+    first_name: form.first_name.trim(),
+    last_name: form.last_name.trim(),
     email: form.email.trim().toLowerCase(),
     password: form.password,
   });
@@ -68,12 +70,13 @@ const Register = ({ isLoading, setIsLoading }) => {
 
     if (
       formContainsEmptyValues({
-        username: registerForm.username,
+        first_name: registerForm.first_name,
+        last_name: registerForm.last_name,
         email: registerForm.email,
         password: registerForm.password,
       })
     ) {
-      notifyError("Please fill required fields", TOP_CENTER);
+      notifyError('Please fill required fields', TOP_CENTER);
       return;
     }
 
@@ -124,11 +127,23 @@ const Register = ({ isLoading, setIsLoading }) => {
           <Typography variant="h6">Create Your Account</Typography>
           <TextField
             type="text"
-            name="username"
-            label="Username"
-            placeholder="Username *"
+            name="first_name"
+            label="First Name"
+            placeholder="First Name *"
             onChange={handleChange}
-            value={registerForm.username}
+            value={registerForm.first_name}
+            inputProps={{ maxLength: 25 }}
+            fullWidth
+            margin="normal"
+          />
+
+          <TextField
+            type="text"
+            name="last_name"
+            label="Last Name"
+            placeholder="Last Name *"
+            onChange={handleChange}
+            value={registerForm.last_name}
             inputProps={{ maxLength: 25 }}
             fullWidth
             margin="normal"
@@ -171,14 +186,14 @@ const Register = ({ isLoading, setIsLoading }) => {
             {isLoading ? (
               <CircularProgress size={18} color="inherit" />
             ) : (
-              "Continue"
+              'Continue'
             )}
           </Button>
         </>
       ) : (
         <>
           <Typography variant="h6">
-            Nice to meet you {registerForm.username}! Tell us a bit more about
+            Nice to meet you {registerForm.first_name}! Tell us a bit more about
             yourself.
           </Typography>
 
@@ -237,7 +252,7 @@ const Register = ({ isLoading, setIsLoading }) => {
             {isLoading ? (
               <CircularProgress size={18} color="inherit" />
             ) : (
-              "Complete Profile"
+              'Complete Profile'
             )}
           </Button>
         </>

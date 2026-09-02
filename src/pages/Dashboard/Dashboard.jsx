@@ -1,66 +1,66 @@
-import React from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import React from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 import {
   faArrowUpRightFromSquare,
   faChartLine,
   faFileContract,
   faGear,
   faPlus,
-} from "@fortawesome/free-solid-svg-icons";
-import { useAuth } from "../../context/AuthContext";
-import Logo from "../../components/Logo/Logo";
-import Profile from "../Profile/Profile";
-import "./Dashboard.scss";
+} from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../context/AuthContext';
+import Logo from '../../components/Logo/Logo';
+import Profile from '../Profile/Profile';
+import './Dashboard.scss';
 
 const contracts = [
   {
-    name: "Northstar Partnership Agreement",
-    date: "Aug 24, 2024",
-    risk: "Low",
+    name: 'Northstar Partnership Agreement',
+    date: 'Aug 24, 2024',
+    risk: 'Low',
     findings: 2,
-    status: "Reviewed",
+    status: 'Reviewed',
   },
   {
-    name: "Acme SaaS Master Services Agreement",
-    date: "Aug 21, 2024",
-    risk: "Medium",
+    name: 'Acme SaaS Master Services Agreement',
+    date: 'Aug 21, 2024',
+    risk: 'Medium',
     findings: 8,
-    status: "Reviewed",
+    status: 'Reviewed',
   },
   {
-    name: "Brightline Employment Contract",
-    date: "Aug 17, 2024",
-    risk: "High",
+    name: 'Brightline Employment Contract',
+    date: 'Aug 17, 2024',
+    risk: 'High',
     findings: 14,
-    status: "Needs review",
+    status: 'Needs review',
   },
   {
-    name: "Luma Ventures NDA",
-    date: "Aug 12, 2024",
-    risk: "Low",
+    name: 'Luma Ventures NDA',
+    date: 'Aug 12, 2024',
+    risk: 'Low',
     findings: 1,
-    status: "Reviewed",
+    status: 'Reviewed',
   },
 ];
 
 const navigation = [
-  { label: "Dashboard", path: "/dashboard", icon: faChartLine },
-  { label: "Contracts", path: "/contracts", icon: faFileContract },
-  { label: "Settings", path: "/settings", icon: faGear },
+  { label: 'Dashboard', path: '/dashboard', icon: faChartLine },
+  { label: 'Contracts', path: '/contracts', icon: faFileContract },
+  { label: 'Settings', path: '/settings', icon: faGear },
 ];
 
-const Dashboard = ({ view = "dashboard" }) => {
+const Dashboard = ({ view = 'dashboard' }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
-  const firstName = user?.username?.split(" ")[0] || "Alex";
-  const isContractsView = view === "contracts";
-  const isSettingsView = view === "settings";
+  const firstName = user?.firstName || 'Alex';
+  const isContractsView = view === 'contracts';
+  const isSettingsView = view === 'settings';
 
   return (
     <div className="dashboard-layout">
@@ -81,7 +81,7 @@ const Dashboard = ({ view = "dashboard" }) => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `sidebar-link${isActive ? " active" : ""}`
+                `sidebar-link${isActive ? ' active' : ''}`
               }
             >
               <ListItemIcon>
@@ -97,7 +97,7 @@ const Dashboard = ({ view = "dashboard" }) => {
             <strong>Turn legal language into clear decisions.</strong>
             <Button
               type="button"
-              onClick={() => navigate("/contracts")}
+              onClick={() => navigate('/contracts')}
               endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
             >
               Explore contracts
@@ -108,7 +108,7 @@ const Dashboard = ({ view = "dashboard" }) => {
               {firstName.charAt(0).toUpperCase()}
             </div>
             <div>
-              <strong>{user?.username || "Alex Morgan"}</strong>
+              <strong>{`${user?.firstName || 'Alex'} ${user?.lastName || 'Morgan'}`}</strong>
               <span>Personal workspace</span>
             </div>
           </div>
@@ -120,16 +120,16 @@ const Dashboard = ({ view = "dashboard" }) => {
           <div>
             <p className="eyebrow">
               {isSettingsView
-                ? "SETTINGS"
+                ? 'SETTINGS'
                 : isContractsView
-                  ? "CONTRACTS"
-                  : "OVERVIEW"}
+                  ? 'CONTRACTS'
+                  : 'OVERVIEW'}
             </p>
             <h1>
               {isSettingsView
-                ? "Account settings"
+                ? 'Account settings'
                 : isContractsView
-                  ? "All contracts"
+                  ? 'All contracts'
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
@@ -137,7 +137,7 @@ const Dashboard = ({ view = "dashboard" }) => {
             <Button
               type="button"
               className="analyze-button"
-              onClick={() => navigate("/contracts")}
+              onClick={() => navigate('/contracts')}
               startIcon={<FontAwesomeIcon icon={faPlus} />}
             >
               Analyze contract
@@ -160,7 +160,7 @@ const Dashboard = ({ view = "dashboard" }) => {
                 <Button
                   type="button"
                   className="panel-action"
-                  onClick={() => navigate("/contracts")}
+                  onClick={() => navigate('/contracts')}
                 >
                   Start an analysis
                 </Button>
@@ -179,14 +179,14 @@ const Dashboard = ({ view = "dashboard" }) => {
                 <p className="eyebrow">YOUR LIBRARY</p>
                 <h2>
                   {isContractsView
-                    ? "Contract library"
-                    : "Recently analyzed contracts"}
+                    ? 'Contract library'
+                    : 'Recently analyzed contracts'}
                 </h2>
               </div>
               <Button
                 type="button"
                 className="view-all"
-                onClick={() => navigate("/contracts")}
+                onClick={() => navigate('/contracts')}
                 endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
               >
                 View all
@@ -224,12 +224,12 @@ const Dashboard = ({ view = "dashboard" }) => {
                         </span>
                       </td>
                       <td>
-                        {contract.findings}{" "}
-                        {contract.findings === 1 ? "finding" : "findings"}
+                        {contract.findings}{' '}
+                        {contract.findings === 1 ? 'finding' : 'findings'}
                       </td>
                       <td>
                         <span
-                          className={`status ${contract.status === "Needs review" ? "status-review" : ""}`}
+                          className={`status ${contract.status === 'Needs review' ? 'status-review' : ''}`}
                         >
                           {contract.status}
                         </span>
