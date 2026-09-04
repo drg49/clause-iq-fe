@@ -47,6 +47,9 @@ const Dashboard = ({ view = "dashboard" }) => {
   const { user } = useAuth();
   const fileInputRef = useRef(null);
 
+  const isContractsView = view === "contracts";
+  const isSettingsView = view === "settings";
+
   const {
     contracts,
     isLoading,
@@ -57,12 +60,9 @@ const Dashboard = ({ view = "dashboard" }) => {
     handlePageChange,
     handleRowsPerPageChange,
     handleUpload,
-  } = useContracts();
+  } = useContracts({ paginated: isContractsView });
 
   const firstName = user?.firstName || "Alex";
-
-  const isContractsView = view === "contracts";
-  const isSettingsView = view === "settings";
 
   const handleFileSelected = async (event) => {
     const file = event.target.files?.[0];
@@ -251,6 +251,7 @@ const Dashboard = ({ view = "dashboard" }) => {
               onRowsPerPageChange={handleRowsPerPageChange}
               page={page}
               rowsPerPage={rowsPerPage}
+              showPagination={isContractsView}
               total={total}
             />
           </section>

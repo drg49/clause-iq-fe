@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { getContracts, uploadContract } from "../api/contracts";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
 
-const useContracts = () => {
+const useContracts = ({ paginated = false } = {}) => {
   const [contracts, setContracts] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isUploading, setIsUploading] = useState(false);
@@ -32,8 +32,8 @@ const useContracts = () => {
   );
 
   useEffect(() => {
-    fetchContracts(page, rowsPerPage);
-  }, [fetchContracts, page, rowsPerPage]);
+    fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
+  }, [fetchContracts, page, paginated, rowsPerPage]);
 
   const handlePageChange = (_, nextPage) => {
     setPage(nextPage);
@@ -49,7 +49,7 @@ const useContracts = () => {
 
     try {
       await uploadContract(file);
-      await fetchContracts(page, rowsPerPage);
+      await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
 
       notifySuccess(`${file.name} uploaded successfully.`);
     } catch (error) {

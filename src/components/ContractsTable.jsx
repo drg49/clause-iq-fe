@@ -19,6 +19,7 @@ const ContractTable = ({
   page,
   rowsPerPage,
   total,
+  showPagination,
   onPageChange,
   onRowsPerPageChange,
 }) => {
@@ -103,16 +104,18 @@ const ContractTable = ({
           )}
         </TableBody>
       </Table>
-      <TablePagination
-        className="contract-table-pagination"
-        component="div"
-        count={total}
-        onPageChange={onPageChange}
-        onRowsPerPageChange={onRowsPerPageChange}
-        page={page}
-        rowsPerPage={rowsPerPage}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+      {showPagination && (
+        <TablePagination
+          className="contract-table-pagination"
+          component="div"
+          count={total}
+          onPageChange={onPageChange}
+          onRowsPerPageChange={onRowsPerPageChange}
+          page={page}
+          rowsPerPage={rowsPerPage}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      )}
     </TableContainer>
   );
 };
