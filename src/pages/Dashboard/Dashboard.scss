@@ -257,7 +257,8 @@ h2 {
   text-align: left;
   width: 100%;
 }
-.contract-table th {
+.contract-table .MuiTableCell-head {
+  border-bottom: 0;
   color: $muted;
   font-size: 0.65rem;
   font-weight: 700;
@@ -265,12 +266,38 @@ h2 {
   padding: 17px 20px;
   text-transform: uppercase;
 }
-.contract-table td {
+.contract-table .MuiTableCell-body {
   border-top: 1px solid $line;
+  border-bottom: 0;
   color: #637474;
   font-size: 0.8rem;
   padding: 18px 20px;
   white-space: nowrap;
+}
+.contract-table .MuiTableRow-root:hover {
+  background: #fbfcfa;
+}
+.contract-table .contract-risk-chip,
+.contract-table .contract-status-chip {
+  border-radius: 20px;
+  font-size: 0.68rem;
+  height: auto;
+  line-height: 1.2;
+  padding: 6px 10px;
+}
+.contract-table .contract-risk-chip {
+  background: #fae9df;
+  border-color: #e9b59d;
+  color: #b85d3e;
+}
+.contract-table .contract-status-chip {
+  background: #e7f2eb;
+  border-color: #b7d8c4;
+  color: #438064;
+}
+.contract-table .contract-risk-chip .MuiChip-label,
+.contract-table .contract-status-chip .MuiChip-label {
+  padding: 0;
 }
 .contract-name {
   align-items: center;
