@@ -1,83 +1,78 @@
-import React, { useRef, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Button from '@mui/material/Button';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
+import React, { useEffect, useRef, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Button from "@mui/material/Button";
+import List from "@mui/material/List";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
 import {
   faArrowUpRightFromSquare,
   faChartLine,
   faFileContract,
   faGear,
   faPlus,
-} from '@fortawesome/free-solid-svg-icons';
-import { useAuth } from '../../context/AuthContext';
-import Logo from '../../components/Logo/Logo';
-import Profile from '../Profile/Profile';
-import { uploadContract } from '../../api/contracts';
-import { notifyError, notifySuccess } from '../../utils/toastMethods';
-import './Dashboard.scss';
-
-const contracts = [
-  {
-    name: 'Northstar Partnership Agreement',
-    date: 'Aug 24, 2024',
-    risk: 'Low',
-    findings: 2,
-    status: 'Reviewed',
-  },
-  {
-    name: 'Acme SaaS Master Services Agreement',
-    date: 'Aug 21, 2024',
-    risk: 'Medium',
-    findings: 8,
-    status: 'Reviewed',
-  },
-  {
-    name: 'Brightline Employment Contract',
-    date: 'Aug 17, 2024',
-    risk: 'High',
-    findings: 14,
-    status: 'Needs review',
-  },
-  {
-    name: 'Luma Ventures NDA',
-    date: 'Aug 12, 2024',
-    risk: 'Low',
-    findings: 1,
-    status: 'Reviewed',
-  },
-];
+} from "@fortawesome/free-solid-svg-icons";
+import { useAuth } from "../../context/AuthContext";
+import Logo from "../../components/Logo/Logo";
+import Profile from "../Profile/Profile";
+import { getContracts, uploadContract } from "../../api/contracts";
+import { notifyError, notifySuccess } from "../../utils/toastMethods";
+import "./Dashboard.scss";
 
 const navigation = [
-  { label: 'Dashboard', path: '/dashboard', icon: faChartLine },
-  { label: 'Contracts', path: '/contracts', icon: faFileContract },
-  { label: 'Settings', path: '/settings', icon: faGear },
+  { label: "Dashboard", path: "/dashboard", icon: faChartLine },
+  { label: "Contracts", path: "/contracts", icon: faFileContract },
+  { label: "Settings", path: "/settings", icon: faGear },
 ];
 
-const Dashboard = ({ view = 'dashboard' }) => {
+const Dashboard = ({ view = "dashboard" }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const fileInputRef = useRef(null);
   const [isUploading, setIsUploading] = useState(false);
-  const firstName = user?.firstName || 'Alex';
-  const isContractsView = view === 'contracts';
-  const isSettingsView = view === 'settings';
+  const [contracts, setContracts] = useState([]);
+  const [isLoadingContracts, setIsLoadingContracts] = useState(true);
+  const firstName = user?.firstName || "Alex";
+  const isContractsView = view === "contracts";
+  const isSettingsView = view === "settings";
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadContracts = async () => {
+      try {
+        const response = await getContracts();
+        if (isMounted) setContracts(response.contracts || []);
+      } catch (error) {
+        if (isMounted)
+          notifyError(error.message || "Unable to load contracts.");
+      } finally {
+        if (isMounted) setIsLoadingContracts(false);
+      }
+    };
+
+    loadContracts();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleUpload = async (event) => {
     const file = event.target.files?.[0];
-    event.target.value = '';
+    event.target.value = "";
 
     if (!file) return;
 
     setIsUploading(true);
     try {
       await uploadContract(file);
+      const response = await getContracts();
+      setContracts(response.contracts || []);
       notifySuccess(`${file.name} uploaded successfully.`);
     } catch (error) {
-      notifyError(error.message || 'Unable to upload the contract.');
+      notifyError(error.message || "Unable to upload the contract.");
     } finally {
       setIsUploading(false);
     }
@@ -104,7 +99,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `sidebar-link${isActive ? ' active' : ''}`
+                `sidebar-link${isActive ? " active" : ""}`
               }
             >
               <ListItemIcon>
@@ -120,7 +115,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
             <strong>Turn legal language into clear decisions.</strong>
             <Button
               type="button"
-              onClick={() => navigate('/contracts')}
+              onClick={() => navigate("/contracts")}
               endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
             >
               Explore contracts
@@ -131,7 +126,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
               {firstName.charAt(0).toUpperCase()}
             </div>
             <div>
-              <strong>{`${user?.firstName || 'Alex'} ${user?.lastName || 'Morgan'}`}</strong>
+              <strong>{`${user?.firstName || "Alex"} ${user?.lastName || "Morgan"}`}</strong>
               <span>Personal workspace</span>
             </div>
           </div>
@@ -143,16 +138,16 @@ const Dashboard = ({ view = 'dashboard' }) => {
           <div>
             <p className="eyebrow">
               {isSettingsView
-                ? 'SETTINGS'
+                ? "SETTINGS"
                 : isContractsView
-                  ? 'CONTRACTS'
-                  : 'OVERVIEW'}
+                  ? "CONTRACTS"
+                  : "OVERVIEW"}
             </p>
             <h1>
               {isSettingsView
-                ? 'Account settings'
+                ? "Account settings"
                 : isContractsView
-                  ? 'All contracts'
+                  ? "All contracts"
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
@@ -172,7 +167,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
                 onClick={openUploadPicker}
                 startIcon={<FontAwesomeIcon icon={faPlus} />}
               >
-                {isUploading ? 'Uploading...' : 'Upload contract'}
+                {isUploading ? "Uploading..." : "Upload contract"}
               </Button>
             </>
           )}
@@ -190,7 +185,7 @@ const Dashboard = ({ view = 'dashboard' }) => {
                   Upload a contract and let ClauseIQ surface risk, missing
                   protections, and negotiation opportunities.
                 </p>
-                <Button type="button" onClick={() => navigate('/contracts')}>
+                <Button type="button" onClick={() => navigate("/contracts")}>
                   Begin analysis
                 </Button>
               </div>
@@ -208,14 +203,14 @@ const Dashboard = ({ view = 'dashboard' }) => {
                 <p className="eyebrow">YOUR LIBRARY</p>
                 <h2>
                   {isContractsView
-                    ? 'Contract library'
-                    : 'Recently analyzed contracts'}
+                    ? "Contract library"
+                    : "Recently analyzed contracts"}
                 </h2>
               </div>
               <Button
                 type="button"
                 className="view-all"
-                onClick={() => navigate('/contracts')}
+                onClick={() => navigate("/contracts")}
                 endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
               >
                 View all
@@ -233,38 +228,38 @@ const Dashboard = ({ view = 'dashboard' }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {contracts.map((contract) => (
-                    <tr key={contract.name}>
-                      <td>
-                        <div className="contract-name">
-                          <span className="document-icon">
-                            <FontAwesomeIcon icon={faFileContract} />
-                          </span>
-                          <strong>{contract.name}</strong>
-                        </div>
-                      </td>
-                      <td>{contract.date}</td>
-                      <td>
-                        <span
-                          className={`risk risk-${contract.risk.toLowerCase()}`}
-                        >
-                          <i />
-                          {contract.risk}
-                        </span>
-                      </td>
-                      <td>
-                        {contract.findings}{' '}
-                        {contract.findings === 1 ? 'finding' : 'findings'}
-                      </td>
-                      <td>
-                        <span
-                          className={`status ${contract.status === 'Needs review' ? 'status-review' : ''}`}
-                        >
-                          {contract.status}
-                        </span>
-                      </td>
+                  {isLoadingContracts ? (
+                    <tr>
+                      <td colSpan="5">Loading contracts...</td>
                     </tr>
-                  ))}
+                  ) : contracts.length === 0 ? (
+                    <tr>
+                      <td colSpan="5">No contracts uploaded yet.</td>
+                    </tr>
+                  ) : (
+                    contracts.map((contract) => (
+                      <tr key={contract.id}>
+                        <td>
+                          <div className="contract-name">
+                            <span className="document-icon">
+                              <FontAwesomeIcon icon={faFileContract} />
+                            </span>
+                            <strong>{contract.name}</strong>
+                          </div>
+                        </td>
+                        <td>
+                          {new Date(contract.created_at).toLocaleDateString()}
+                        </td>
+                        <td>
+                          <span className="risk">Pending analysis</span>
+                        </td>
+                        <td>-</td>
+                        <td>
+                          <span className="status">Uploaded</span>
+                        </td>
+                      </tr>
+                    ))
+                  )}
                 </tbody>
               </table>
             </div>
