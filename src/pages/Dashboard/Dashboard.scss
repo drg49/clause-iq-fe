@@ -277,6 +277,26 @@ h2 {
 .contract-table .MuiTableRow-root:hover {
   background: #fbfcfa;
 }
+.contract-table-message {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  min-height: 96px;
+}
+.contract-table-pagination {
+  border-top: 1px solid $line;
+  min-width: 760px;
+}
+.contract-table-pagination .MuiTablePagination-toolbar {
+  min-height: 56px;
+  padding: 0 20px;
+}
+.contract-table-pagination .MuiTablePagination-selectLabel,
+.contract-table-pagination .MuiTablePagination-displayedRows {
+  color: $muted;
+  font-size: 0.75rem;
+}
 .contract-table .contract-risk-chip,
 .contract-table .contract-status-chip {
   border-radius: 20px;

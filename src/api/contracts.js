@@ -1,8 +1,6 @@
 import { handleResponse } from "../utils/helperMethods";
 
 const root = process.env.REACT_APP_API_ROOT_URL + "/contracts";
-const token = localStorage.getItem("token");
-
 export const uploadContract = async (file) => {
   const formData = new FormData();
   formData.append("file", file);
@@ -11,19 +9,25 @@ export const uploadContract = async (file) => {
     await fetch(`${root}/upload`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: formData,
     }),
   );
 };
 
-export const getContracts = async () =>
-  handleResponse(
-    await fetch(root, {
+export const getContracts = async ({ limit = 10, offset = 0 } = {}) => {
+  const params = new URLSearchParams({
+    limit: String(limit),
+    offset: String(offset),
+  });
+
+  return handleResponse(
+    await fetch(`${root}?${params.toString()}`, {
       method: "GET",
       headers: {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
   );
+};

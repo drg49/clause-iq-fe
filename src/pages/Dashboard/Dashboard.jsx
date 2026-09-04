@@ -47,7 +47,17 @@ const Dashboard = ({ view = "dashboard" }) => {
   const { user } = useAuth();
   const fileInputRef = useRef(null);
 
-  const { contracts, isLoading, isUploading, handleUpload } = useContracts();
+  const {
+    contracts,
+    isLoading,
+    isUploading,
+    page,
+    rowsPerPage,
+    total,
+    handlePageChange,
+    handleRowsPerPageChange,
+    handleUpload,
+  } = useContracts();
 
   const firstName = user?.firstName || "Alex";
 
@@ -222,17 +232,27 @@ const Dashboard = ({ view = "dashboard" }) => {
                 </h2>
               </div>
 
-              <Button
-                type="button"
-                className="view-all"
-                onClick={() => navigate("/contracts")}
-                endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
-              >
-                View all
-              </Button>
+              {!isContractsView && (
+                <Button
+                  type="button"
+                  className="view-all"
+                  onClick={() => navigate("/contracts")}
+                  endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
+                >
+                  View all
+                </Button>
+              )}
             </div>
 
-            <ContractsTable contracts={contracts} isLoading={isLoading} />
+            <ContractsTable
+              contracts={contracts}
+              isLoading={isLoading}
+              onPageChange={handlePageChange}
+              onRowsPerPageChange={handleRowsPerPageChange}
+              page={page}
+              rowsPerPage={rowsPerPage}
+              total={total}
+            />
           </section>
         )}
       </main>
