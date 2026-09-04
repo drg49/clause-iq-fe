@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getContracts, uploadContract } from "../api/contracts";
+import { deleteContract, getContracts, uploadContract } from "../api/contracts";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
 
 const useContracts = ({ paginated = false } = {}) => {
@@ -59,6 +59,22 @@ const useContracts = ({ paginated = false } = {}) => {
     }
   };
 
+  const handleDelete = async (contract) => {
+    try {
+      await deleteContract(contract.id);
+
+      if (paginated && page > 0 && contracts.length === 1) {
+        setPage((currentPage) => currentPage - 1);
+      } else {
+        await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
+      }
+
+      notifySuccess(`${contract.name} deleted successfully.`);
+    } catch (error) {
+      notifyError(error.message || "Unable to delete the contract.");
+    }
+  };
+
   return {
     contracts,
     isLoading,
@@ -69,6 +85,7 @@ const useContracts = ({ paginated = false } = {}) => {
     handlePageChange,
     handleRowsPerPageChange,
     handleUpload,
+    handleDelete,
   };
 };
 

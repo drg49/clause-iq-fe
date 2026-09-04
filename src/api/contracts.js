@@ -31,3 +31,13 @@ export const getContracts = async ({ limit = 10, offset = 0 } = {}) => {
     }),
   );
 };
+
+export const deleteContract = async (contractId) =>
+  handleResponse(
+    await fetch(`${root}/${contractId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }),
+  );

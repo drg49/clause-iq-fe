@@ -60,6 +60,7 @@ const Dashboard = ({ view = "dashboard" }) => {
     handlePageChange,
     handleRowsPerPageChange,
     handleUpload,
+    handleDelete,
   } = useContracts({ paginated: isContractsView });
 
   const firstName = user?.firstName || "Alex";
@@ -249,6 +250,7 @@ const Dashboard = ({ view = "dashboard" }) => {
               isLoading={isLoading}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
+              onDeleteContract={handleDelete}
               page={page}
               rowsPerPage={rowsPerPage}
               showPagination={isContractsView}

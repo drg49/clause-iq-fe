@@ -27,6 +27,7 @@ const ContractTable = ({
   showPagination,
   onPageChange,
   onRowsPerPageChange,
+  onDeleteContract,
 }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedContract, setSelectedContract] = useState(null);
@@ -42,7 +43,12 @@ const ContractTable = ({
   };
 
   const handleAction = (action) => {
-    console.log(action, selectedContract);
+    if (action === "Delete Contract") {
+      onDeleteContract(selectedContract);
+    } else {
+      console.log(action, selectedContract);
+    }
+
     closeMenu();
   };
 
