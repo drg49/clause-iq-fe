@@ -125,12 +125,21 @@ const ContractTable = ({
                   </TableCell>
 
                   <TableCell>
-                    <Chip
-                      className="contract-status-chip"
-                      label="Uploaded"
-                      size="small"
-                      variant="outlined"
-                    />
+                    <Box className="contract-status-cell">
+                      <Chip
+                        className="contract-status-chip"
+                        label={contract.status}
+                        size="small"
+                        variant="outlined"
+                      />
+
+                      {contract.status === "ANALYZING" && (
+                        <CircularProgress
+                          aria-label="Contract analysis in progress"
+                          size={16}
+                        />
+                      )}
+                    </Box>
                   </TableCell>
 
                   <TableCell className="contract-actions-cell">

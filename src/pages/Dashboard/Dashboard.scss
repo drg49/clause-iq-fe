@@ -326,6 +326,11 @@ h2 {
   border-color: #b7d8c4;
   color: #438064;
 }
+.contract-status-cell {
+  align-items: center;
+  display: inline-flex;
+  gap: 8px;
+}
 .contract-table .contract-risk-chip .MuiChip-label,
 .contract-table .contract-status-chip .MuiChip-label {
   padding: 0;
