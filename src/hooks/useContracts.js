@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { deleteContract, getContracts, uploadContract } from "../api/contracts";
+import {
+  analyzeContract,
+  deleteContract,
+  getContracts,
+  uploadContract,
+} from "../api/contracts";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
 
 const useContracts = ({ paginated = false } = {}) => {
@@ -48,10 +53,17 @@ const useContracts = ({ paginated = false } = {}) => {
     setIsUploading(true);
 
     try {
-      await uploadContract(file);
+      const uploadResponse = await uploadContract(file);
+      const contractId = uploadResponse.contract?.id || uploadResponse.id;
+
+      if (!contractId) {
+        throw new Error("The uploaded contract ID was not returned.");
+      }
+
+      await analyzeContract(contractId);
       await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
 
-      notifySuccess(`${file.name} uploaded successfully.`);
+      notifySuccess(`${file.name} uploaded and analysis started.`);
     } catch (error) {
       notifyError(error.message || "Unable to upload the contract.");
     } finally {
