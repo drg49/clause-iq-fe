@@ -17,6 +17,7 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { formatContractDate } from "../utils/helperMethods";
 
 const statusLabels = {
   PENDING: "Pending...",
@@ -67,9 +68,9 @@ const ContractTable = ({
         <Table className="contract-table">
           <TableHead>
             <TableRow>
-              <TableCell>Contract name</TableCell>
-              <TableCell>Date analyzed</TableCell>
-              <TableCell>Overall risk</TableCell>
+              <TableCell>Contract</TableCell>
+              <TableCell>Upload Date</TableCell>
+              <TableCell>Overall Risk</TableCell>
               <TableCell>Findings</TableCell>
               <TableCell>Status</TableCell>
               <TableCell className="contract-actions-cell">Actions</TableCell>
@@ -114,7 +115,7 @@ const ContractTable = ({
 
                   <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      {new Date(contract.created_at).toLocaleDateString()}
+                      {formatContractDate(contract.created_at)}
                     </Typography>
                   </TableCell>
 
