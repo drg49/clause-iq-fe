@@ -1,6 +1,9 @@
 import { useCallback, useEffect, useState } from "react";
 import { deleteContract, getContracts, uploadContract } from "../api/contracts";
+import { TOAST_POSITIONS } from "../utils/constants";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
+
+const { BOTTOM_RIGHT } = TOAST_POSITIONS;
 
 const useContracts = ({ paginated = false } = {}) => {
   const [contracts, setContracts] = useState([]);
@@ -23,7 +26,7 @@ const useContracts = ({ paginated = false } = {}) => {
         setContracts(response.contracts || []);
         setTotal(response.pagination?.total || 0);
       } catch (error) {
-        notifyError(error.message || "Unable to load contracts.");
+        notifyError(error.message || "Unable to load contracts.", BOTTOM_RIGHT);
       } finally {
         setIsLoading(false);
       }
@@ -51,9 +54,9 @@ const useContracts = ({ paginated = false } = {}) => {
       await uploadContract(file);
       await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
 
-      notifySuccess(`${file.name} uploaded successfully.`);
+      notifySuccess(`${file.name} uploaded successfully.`, BOTTOM_RIGHT);
     } catch (error) {
-      notifyError(error.message || "Unable to upload the contract.");
+      notifyError(error.message || "Unable to upload the contract.", BOTTOM_RIGHT);
     } finally {
       setIsUploading(false);
     }
@@ -69,9 +72,9 @@ const useContracts = ({ paginated = false } = {}) => {
         await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
       }
 
-      notifySuccess(`${contract.name} deleted successfully.`);
+      notifySuccess(`${contract.name} deleted successfully.`, BOTTOM_RIGHT);
     } catch (error) {
-      notifyError(error.message || "Unable to delete the contract.");
+      notifyError(error.message || "Unable to delete the contract.", BOTTOM_RIGHT);
     }
   };
 
