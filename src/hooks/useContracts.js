@@ -35,23 +35,6 @@ const useContracts = ({ paginated = false } = {}) => {
     fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
   }, [fetchContracts, page, paginated, rowsPerPage]);
 
-  useEffect(() => {
-    const hasInProgressContracts = contracts.some(
-      (contract) =>
-        contract.status === "PENDING" || contract.status === "ANALYZING",
-    );
-
-    if (!hasInProgressContracts) {
-      return undefined;
-    }
-
-    const refreshInterval = setInterval(() => {
-      fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
-    }, 5000);
-
-    return () => clearInterval(refreshInterval);
-  }, [contracts, fetchContracts, page, paginated, rowsPerPage]);
-
   const handlePageChange = (_, nextPage) => {
     setPage(nextPage);
   };

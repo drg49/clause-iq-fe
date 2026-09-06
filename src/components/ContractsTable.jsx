@@ -141,9 +141,7 @@ const ContractTable = ({
                         size="small"
                         variant="outlined"
                       />
-
-                      {(contract.status === "PENDING" ||
-                        contract.status === "ANALYZING") && (
+                      {contract.status === "ANALYZING" && (
                         <CircularProgress
                           aria-label={`${getStatusLabel(contract.status)} contract analysis`}
                           size={16}
