@@ -16,16 +16,6 @@ export const uploadContract = async (file) => {
   );
 };
 
-export const analyzeContract = async (contractId) =>
-  handleResponse(
-    await fetch(`${root}/${contractId}/analyze`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-    }),
-  );
-
 export const getContracts = async ({ limit = 10, offset = 0 } = {}) => {
   const params = new URLSearchParams({
     limit: String(limit),

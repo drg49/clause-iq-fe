@@ -1,10 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import {
-  analyzeContract,
-  deleteContract,
-  getContracts,
-  uploadContract,
-} from "../api/contracts";
+import { deleteContract, getContracts, uploadContract } from "../api/contracts";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
 
 const useContracts = ({ paginated = false } = {}) => {
@@ -40,6 +35,23 @@ const useContracts = ({ paginated = false } = {}) => {
     fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
   }, [fetchContracts, page, paginated, rowsPerPage]);
 
+  useEffect(() => {
+    const hasInProgressContracts = contracts.some(
+      (contract) =>
+        contract.status === "PENDING" || contract.status === "ANALYZING",
+    );
+
+    if (!hasInProgressContracts) {
+      return undefined;
+    }
+
+    const refreshInterval = setInterval(() => {
+      fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
+    }, 5000);
+
+    return () => clearInterval(refreshInterval);
+  }, [contracts, fetchContracts, page, paginated, rowsPerPage]);
+
   const handlePageChange = (_, nextPage) => {
     setPage(nextPage);
   };
@@ -53,17 +65,10 @@ const useContracts = ({ paginated = false } = {}) => {
     setIsUploading(true);
 
     try {
-      const uploadResponse = await uploadContract(file);
-      const contractId = uploadResponse.contract?.id || uploadResponse.id;
-
-      if (!contractId) {
-        throw new Error("The uploaded contract ID was not returned.");
-      }
-
-      await analyzeContract(contractId);
+      await uploadContract(file);
       await fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
 
-      notifySuccess(`${file.name} uploaded and analysis started.`);
+      notifySuccess(`${file.name} uploaded successfully.`);
     } catch (error) {
       notifyError(error.message || "Unable to upload the contract.");
     } finally {

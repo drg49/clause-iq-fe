@@ -1,9 +1,6 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFileContract,
-  faHourglassHalf,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -22,9 +19,10 @@ import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 
 const statusLabels = {
-  QUEUED: "Queued",
-  ANALYZING: "Analyzing",
+  PENDING: "Pending...",
+  ANALYZING: "Analyzing...",
   ANALYZED: "Analyzed",
+  FAILED: "Failed",
 };
 
 const getStatusLabel = (status) => statusLabels[status] || status || "Unknown";
@@ -138,25 +136,16 @@ const ContractTable = ({
                   <TableCell>
                     <Box className="contract-status-cell">
                       <Chip
-                        className={`contract-status-chip${
-                          contract.status === "QUEUED" ? " queued" : ""
-                        }`}
+                        className={`contract-status-chip ${contract.status.toLowerCase()}`}
                         label={getStatusLabel(contract.status)}
                         size="small"
                         variant="outlined"
                       />
 
-                      {contract.status === "QUEUED" && (
-                        <FontAwesomeIcon
-                          aria-label="Contract analysis queued"
-                          className="contract-status-icon"
-                          icon={faHourglassHalf}
-                        />
-                      )}
-
-                      {contract.status === "ANALYZING" && (
+                      {(contract.status === "PENDING" ||
+                        contract.status === "ANALYZING") && (
                         <CircularProgress
-                          aria-label="Contract analysis in progress"
+                          aria-label={`${getStatusLabel(contract.status)} contract analysis`}
                           size={16}
                         />
                       )}
@@ -184,9 +173,11 @@ const ContractTable = ({
         open={Boolean(menuAnchor)}
         onClose={closeMenu}
       >
-        <MenuItem onClick={() => handleAction("View Analysis")}>
-          View Analysis
-        </MenuItem>
+        {selectedContract?.status === "ANALYZED" && (
+          <MenuItem onClick={() => handleAction("View Analysis")}>
+            View Analysis
+          </MenuItem>
+        )}
         <MenuItem onClick={() => handleAction("Preview Contract")}>
           Preview Contract
         </MenuItem>
