@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileContract } from "@fortawesome/free-solid-svg-icons";
+import {
+  faFileContract,
+  faHourglassHalf,
+} from "@fortawesome/free-solid-svg-icons";
 
 import Box from "@mui/material/Box";
 import Chip from "@mui/material/Chip";
@@ -17,6 +20,14 @@ import TablePagination from "@mui/material/TablePagination";
 import TableRow from "@mui/material/TableRow";
 import Typography from "@mui/material/Typography";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+
+const statusLabels = {
+  QUEUED: "Queued",
+  ANALYZING: "Analyzing",
+  ANALYZED: "Analyzed",
+};
+
+const getStatusLabel = (status) => statusLabels[status] || status || "Unknown";
 
 const ContractTable = ({
   contracts,
@@ -127,11 +138,21 @@ const ContractTable = ({
                   <TableCell>
                     <Box className="contract-status-cell">
                       <Chip
-                        className="contract-status-chip"
-                        label={contract.status}
+                        className={`contract-status-chip${
+                          contract.status === "QUEUED" ? " queued" : ""
+                        }`}
+                        label={getStatusLabel(contract.status)}
                         size="small"
                         variant="outlined"
                       />
+
+                      {contract.status === "QUEUED" && (
+                        <FontAwesomeIcon
+                          aria-label="Contract analysis queued"
+                          className="contract-status-icon"
+                          icon={faHourglassHalf}
+                        />
+                      )}
 
                       {contract.status === "ANALYZING" && (
                         <CircularProgress
