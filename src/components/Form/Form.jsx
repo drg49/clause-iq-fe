@@ -1,4 +1,4 @@
-import "./Form.scss";
+import './Form.scss';
 
 /**
  * A form component that can be used to wrap form elements.
@@ -10,7 +10,7 @@ import "./Form.scss";
  */
 const Form = ({ children, id, columns }) => {
   return (
-    <div id={id} className={`app-form ${columns || ""}`}>
+    <div id={id} className={`app-form ${columns || ''}`}>
       {children}
     </div>
   );

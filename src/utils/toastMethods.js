@@ -1,10 +1,10 @@
-import { toast } from "react-toastify";
-import { css } from "glamor";
+import { toast } from 'react-toastify';
+import { css } from 'glamor';
 
 const theme = {
-  success: "#1ab394",
-  error: "#ed5565",
-  warning: "#f8ac59"
+  success: '#1ab394',
+  error: '#ed5565',
+  warning: '#f8ac59',
 };
 
 const defaultOptions = {
@@ -12,7 +12,7 @@ const defaultOptions = {
   hideProgressBar: false,
   closeOnClick: true,
   pauseOnHover: true,
-  draggable: true
+  draggable: true,
 };
 
 const notify = (message, type, position, canDuplicate) => {
@@ -20,17 +20,26 @@ const notify = (message, type, position, canDuplicate) => {
     ...defaultOptions,
     position,
     toastId: canDuplicate ? undefined : `${type}-toast`,
-    className: css({ background: theme[type] })
+    className: css({ background: theme[type] }),
   };
 
   toast[type](message, toastOptions);
 };
 
-export const notifySuccess = (message, position = "top-right", canDuplicate = true) =>
-  notify(message, "success", position, canDuplicate);
+export const notifySuccess = (
+  message,
+  position = 'top-right',
+  canDuplicate = true,
+) => notify(message, 'success', position, canDuplicate);
 
-export const notifyError = (message, position = "top-right", canDuplicate = true) =>
-  notify(message, "error", position, canDuplicate);
+export const notifyError = (
+  message,
+  position = 'top-right',
+  canDuplicate = true,
+) => notify(message, 'error', position, canDuplicate);
 
-export const notifyWarn = (message, position = "top-right", canDuplicate = true) =>
-  notify(message, "warning", position, canDuplicate);
+export const notifyWarn = (
+  message,
+  position = 'top-right',
+  canDuplicate = true,
+) => notify(message, 'warning', position, canDuplicate);

@@ -1,7 +1,7 @@
-import { useCallback, useEffect, useState } from "react";
-import { deleteContract, getContracts, uploadContract } from "../api/contracts";
-import { TOAST_POSITIONS } from "../utils/constants";
-import { notifyError, notifySuccess } from "../utils/toastMethods";
+import { useCallback, useEffect, useState } from 'react';
+import { deleteContract, getContracts, uploadContract } from '../api/contracts';
+import { TOAST_POSITIONS } from '../utils/constants';
+import { notifyError, notifySuccess } from '../utils/toastMethods';
 
 const { BOTTOM_RIGHT } = TOAST_POSITIONS;
 
@@ -26,7 +26,7 @@ const useContracts = ({ paginated = false } = {}) => {
         setContracts(response.contracts || []);
         setTotal(response.pagination?.total || 0);
       } catch (error) {
-        notifyError(error.message || "Unable to load contracts.", BOTTOM_RIGHT);
+        notifyError(error.message || 'Unable to load contracts.', BOTTOM_RIGHT);
       } finally {
         setIsLoading(false);
       }
@@ -56,7 +56,10 @@ const useContracts = ({ paginated = false } = {}) => {
 
       notifySuccess(`${file.name} uploaded successfully.`, BOTTOM_RIGHT);
     } catch (error) {
-      notifyError(error.message || "Unable to upload the contract.", BOTTOM_RIGHT);
+      notifyError(
+        error.message || 'Unable to upload the contract.',
+        BOTTOM_RIGHT,
+      );
     } finally {
       setIsUploading(false);
     }
@@ -74,7 +77,10 @@ const useContracts = ({ paginated = false } = {}) => {
 
       notifySuccess(`${contract.name} deleted successfully.`, BOTTOM_RIGHT);
     } catch (error) {
-      notifyError(error.message || "Unable to delete the contract.", BOTTOM_RIGHT);
+      notifyError(
+        error.message || 'Unable to delete the contract.',
+        BOTTOM_RIGHT,
+      );
     }
   };
 

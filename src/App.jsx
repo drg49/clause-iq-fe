@@ -1,14 +1,14 @@
-import { Routes, Route } from "react-router";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import CssBaseline from "@mui/material/CssBaseline";
-import { ToastContainer } from "react-toastify";
-import { AuthProvider, useAuth } from "./context/AuthContext";
-import Dashboard from "./pages/Dashboard/Dashboard";
-import Auth from "./pages/Auth/Auth";
-import Profile from "./pages/Profile/Profile";
-import "react-toastify/dist/ReactToastify.css";
+import { Routes, Route } from 'react-router';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ToastContainer } from 'react-toastify';
+import { AuthProvider, useAuth } from './context/AuthContext';
+import Dashboard from './pages/Dashboard/Dashboard';
+import Auth from './pages/Auth/Auth';
+import Profile from './pages/Profile/Profile';
+import 'react-toastify/dist/ReactToastify.css';
 
 const spinner = (
   <div className="spinner-wrapper">
@@ -42,7 +42,7 @@ const AppContent = () => {
 const App = () => {
   const theme = createTheme({
     palette: {
-      mode: "light",
+      mode: 'light',
     },
   });
 

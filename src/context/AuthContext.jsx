@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { validateUser } from "../api/authentication";
+import { createContext, useContext, useEffect, useState } from 'react';
+import { validateUser } from '../api/authentication';
 
 const AuthContext = createContext(null);
 
@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem('token');
 
     if (!token) {
       setIsLoggedIn(false);
@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoggedIn(true);
       })
       .catch(() => {
-        localStorage.removeItem("token");
+        localStorage.removeItem('token');
         setUser(null);
         setIsLoggedIn(false);
       });
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
 };

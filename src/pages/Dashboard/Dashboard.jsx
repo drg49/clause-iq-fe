@@ -1,54 +1,54 @@
-import React, { useRef } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useRef } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faArrowUpRightFromSquare,
   faChartLine,
   faFileContract,
   faGear,
   faPlus,
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 
-import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
-import List from "@mui/material/List";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import List from '@mui/material/List';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
 
-import { useAuth } from "../../context/AuthContext";
-import Logo from "../../components/Logo/Logo";
-import Profile from "../Profile/Profile";
-import ContractsTable from "../../components/ContractsTable";
-import useContracts from "../../hooks/useContracts";
+import { useAuth } from '../../context/AuthContext';
+import Logo from '../../components/Logo/Logo';
+import Profile from '../Profile/Profile';
+import ContractsTable from '../../components/ContractsTable';
+import useContracts from '../../hooks/useContracts';
 
-import "./Dashboard.scss";
+import './Dashboard.scss';
 
 const navigation = [
   {
-    label: "Dashboard",
-    path: "/dashboard",
+    label: 'Dashboard',
+    path: '/dashboard',
     icon: faChartLine,
   },
   {
-    label: "Contracts",
-    path: "/contracts",
+    label: 'Contracts',
+    path: '/contracts',
     icon: faFileContract,
   },
   {
-    label: "Settings",
-    path: "/settings",
+    label: 'Settings',
+    path: '/settings',
     icon: faGear,
   },
 ];
 
-const Dashboard = ({ view = "dashboard" }) => {
+const Dashboard = ({ view = 'dashboard' }) => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const fileInputRef = useRef(null);
 
-  const isContractsView = view === "contracts";
-  const isSettingsView = view === "settings";
+  const isContractsView = view === 'contracts';
+  const isSettingsView = view === 'settings';
 
   const {
     contracts,
@@ -63,12 +63,12 @@ const Dashboard = ({ view = "dashboard" }) => {
     handleDelete,
   } = useContracts({ paginated: isContractsView });
 
-  const firstName = user?.firstName || "Alex";
+  const firstName = user?.firstName || 'Alex';
 
   const handleFileSelected = async (event) => {
     const file = event.target.files?.[0];
 
-    event.target.value = "";
+    event.target.value = '';
 
     if (!file) {
       return;
@@ -102,7 +102,7 @@ const Dashboard = ({ view = "dashboard" }) => {
               key={item.path}
               to={item.path}
               className={({ isActive }) =>
-                `sidebar-link${isActive ? " active" : ""}`
+                `sidebar-link${isActive ? ' active' : ''}`
               }
             >
               <ListItemIcon>
@@ -122,7 +122,7 @@ const Dashboard = ({ view = "dashboard" }) => {
 
             <Button
               type="button"
-              onClick={() => navigate("/contracts")}
+              onClick={() => navigate('/contracts')}
               endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
             >
               Explore contracts
@@ -136,7 +136,7 @@ const Dashboard = ({ view = "dashboard" }) => {
 
             <div>
               <strong>
-                {`${user?.firstName || "Alex"} ${user?.lastName || "Morgan"}`}
+                {`${user?.firstName || 'Alex'} ${user?.lastName || 'Morgan'}`}
               </strong>
 
               <span>Personal workspace</span>
@@ -150,17 +150,17 @@ const Dashboard = ({ view = "dashboard" }) => {
           <div>
             <p className="eyebrow">
               {isSettingsView
-                ? "SETTINGS"
+                ? 'SETTINGS'
                 : isContractsView
-                  ? "CONTRACTS"
-                  : "OVERVIEW"}
+                  ? 'CONTRACTS'
+                  : 'OVERVIEW'}
             </p>
 
             <h1>
               {isSettingsView
-                ? "Account settings"
+                ? 'Account settings'
                 : isContractsView
-                  ? "All contracts"
+                  ? 'All contracts'
                   : `Good morning, ${firstName}`}
             </h1>
           </div>
@@ -168,8 +168,8 @@ const Dashboard = ({ view = "dashboard" }) => {
           {isContractsView && (
             <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
+                display: 'flex',
+                alignItems: 'center',
               }}
             >
               <input
@@ -187,7 +187,7 @@ const Dashboard = ({ view = "dashboard" }) => {
                 onClick={openUploadPicker}
                 startIcon={<FontAwesomeIcon icon={faPlus} />}
               >
-                {isUploading ? "Uploading..." : "Upload contract"}
+                {isUploading ? 'Uploading...' : 'Upload contract'}
               </Button>
             </Box>
           )}
@@ -208,7 +208,7 @@ const Dashboard = ({ view = "dashboard" }) => {
                   protections, and negotiation opportunities.
                 </p>
 
-                <Button type="button" onClick={() => navigate("/contracts")}>
+                <Button type="button" onClick={() => navigate('/contracts')}>
                   Begin analysis
                 </Button>
               </div>
@@ -228,8 +228,8 @@ const Dashboard = ({ view = "dashboard" }) => {
 
                 <h2>
                   {isContractsView
-                    ? "Contract library"
-                    : "Recently analyzed contracts"}
+                    ? 'Contract library'
+                    : 'Recently analyzed contracts'}
                 </h2>
               </div>
 
@@ -237,7 +237,7 @@ const Dashboard = ({ view = "dashboard" }) => {
                 <Button
                   type="button"
                   className="view-all"
-                  onClick={() => navigate("/contracts")}
+                  onClick={() => navigate('/contracts')}
                   endIcon={<FontAwesomeIcon icon={faArrowUpRightFromSquare} />}
                 >
                   View all
