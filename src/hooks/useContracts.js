@@ -1,9 +1,10 @@
-import { useCallback, useEffect, useState } from 'react';
-import { deleteContract, getContracts, uploadContract } from '../api/contracts';
-import { TOAST_POSITIONS } from '../utils/constants';
-import { notifyError, notifySuccess } from '../utils/toastMethods';
+import { useCallback, useEffect, useState } from "react";
+import { deleteContract, getContracts, uploadContract } from "../api/contracts";
+import { TOAST_POSITIONS } from "../utils/constants";
+import { notifyError, notifySuccess } from "../utils/toastMethods";
 
 const { BOTTOM_RIGHT } = TOAST_POSITIONS;
+const POLLING_INTERVAL_MS = 10000;
 
 const useContracts = ({ paginated = false } = {}) => {
   const [contracts, setContracts] = useState([]);
@@ -26,7 +27,7 @@ const useContracts = ({ paginated = false } = {}) => {
         setContracts(response.contracts || []);
         setTotal(response.pagination?.total || 0);
       } catch (error) {
-        notifyError(error.message || 'Unable to load contracts.', BOTTOM_RIGHT);
+        notifyError(error.message || "Unable to load contracts.", BOTTOM_RIGHT);
       } finally {
         setIsLoading(false);
       }
@@ -37,6 +38,23 @@ const useContracts = ({ paginated = false } = {}) => {
   useEffect(() => {
     fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
   }, [fetchContracts, page, paginated, rowsPerPage]);
+
+  useEffect(() => {
+    const hasActiveAnalysis = contracts.some(
+      (contract) =>
+        contract.status === "ANALYZING" || contract.status === "PENDING",
+    );
+
+    if (!hasActiveAnalysis) {
+      return undefined;
+    }
+
+    const pollingId = setInterval(() => {
+      fetchContracts(paginated ? page : 0, paginated ? rowsPerPage : 5);
+    }, POLLING_INTERVAL_MS);
+
+    return () => clearInterval(pollingId);
+  }, [contracts, fetchContracts, paginated, page, rowsPerPage]);
 
   const handlePageChange = (_, nextPage) => {
     setPage(nextPage);
@@ -57,7 +75,7 @@ const useContracts = ({ paginated = false } = {}) => {
       notifySuccess(`${file.name} uploaded successfully.`, BOTTOM_RIGHT);
     } catch (error) {
       notifyError(
-        error.message || 'Unable to upload the contract.',
+        error.message || "Unable to upload the contract.",
         BOTTOM_RIGHT,
       );
     } finally {
@@ -78,7 +96,7 @@ const useContracts = ({ paginated = false } = {}) => {
       notifySuccess(`${contract.name} deleted successfully.`, BOTTOM_RIGHT);
     } catch (error) {
       notifyError(
-        error.message || 'Unable to delete the contract.',
+        error.message || "Unable to delete the contract.",
         BOTTOM_RIGHT,
       );
     }
