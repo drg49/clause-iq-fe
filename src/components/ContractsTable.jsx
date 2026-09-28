@@ -1,32 +1,66 @@
-import { useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFileContract } from '@fortawesome/free-solid-svg-icons';
+import { useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import CircularProgress from '@mui/material/CircularProgress';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TablePagination from '@mui/material/TablePagination';
-import TableRow from '@mui/material/TableRow';
-import Typography from '@mui/material/Typography';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { formatContractDate } from '../utils/helperMethods';
+import Box from "@mui/material/Box";
+import Chip from "@mui/material/Chip";
+import CircularProgress from "@mui/material/CircularProgress";
+import IconButton from "@mui/material/IconButton";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import Typography from "@mui/material/Typography";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { formatContractDate } from "../utils/helperMethods";
 
 const statusLabels = {
-  PENDING: 'Pending...',
-  ANALYZING: 'Analyzing...',
-  ANALYZED: 'Analyzed',
-  FAILED: 'Failed',
+  PENDING: "Pending...",
+  ANALYZING: "Analyzing...",
+  ANALYZED: "Analyzed",
+  FAILED: "Failed",
 };
 
-const getStatusLabel = (status) => statusLabels[status] || status || 'Unknown';
+const getStatusLabel = (status) => statusLabels[status] || status || "Unknown";
+
+const getContractRiskValue = (contract) => {
+  const value =
+    contract?.overall_risk ??
+    contract?.overallRisk ??
+    contract?.risk_score ??
+    contract?.riskScore ??
+    contract?.risk_level ??
+    contract?.riskLevel ??
+    contract?.risk ??
+    null;
+
+  if (value === null || value === undefined || value === "") {
+    return "Pending analysis";
+  }
+
+  if (typeof value === "object") {
+    if (typeof value.score === "number") {
+      return `${value.score}`;
+    }
+
+    if (value.label) {
+      return value.label;
+    }
+
+    if (value.name) {
+      return value.name;
+    }
+
+    return "Risk detected";
+  }
+
+  return String(value);
+};
 
 const ContractTable = ({
   contracts,
@@ -53,7 +87,7 @@ const ContractTable = ({
   };
 
   const handleAction = (action) => {
-    if (action === 'Delete Contract') {
+    if (action === "Delete Contract") {
       onDeleteContract(selectedContract);
     } else {
       console.log(action, selectedContract);
@@ -122,7 +156,7 @@ const ContractTable = ({
                   <TableCell>
                     <Chip
                       className="contract-risk-chip"
-                      label="Pending analysis"
+                      label={getContractRiskValue(contract)}
                       size="small"
                       variant="outlined"
                     />
@@ -142,7 +176,7 @@ const ContractTable = ({
                         size="small"
                         variant="outlined"
                       />
-                      {contract.status === 'ANALYZING' && (
+                      {contract.status === "ANALYZING" && (
                         <CircularProgress
                           aria-label={`${getStatusLabel(contract.status)} contract analysis`}
                           size={16}
@@ -172,15 +206,15 @@ const ContractTable = ({
         open={Boolean(menuAnchor)}
         onClose={closeMenu}
       >
-        {selectedContract?.status === 'ANALYZED' && (
-          <MenuItem onClick={() => handleAction('View Analysis')}>
+        {selectedContract?.status === "ANALYZED" && (
+          <MenuItem onClick={() => handleAction("View Analysis")}>
             View Analysis
           </MenuItem>
         )}
-        <MenuItem onClick={() => handleAction('Preview Contract')}>
+        <MenuItem onClick={() => handleAction("Preview Contract")}>
           Preview Contract
         </MenuItem>
-        <MenuItem onClick={() => handleAction('Delete Contract')}>
+        <MenuItem onClick={() => handleAction("Delete Contract")}>
           Delete Contract
         </MenuItem>
       </Menu>
