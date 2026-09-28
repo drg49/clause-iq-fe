@@ -34,37 +34,11 @@ const statusLabels = {
 const getStatusLabel = (status) => statusLabels[status] || status || "Unknown";
 
 const getContractRiskValue = (contract) => {
-  const value =
-    contract?.overall_risk ??
-    contract?.overallRisk ??
-    contract?.risk_score ??
-    contract?.riskScore ??
-    contract?.risk_level ??
-    contract?.riskLevel ??
-    contract?.risk ??
-    null;
-
-  if (value === null || value === undefined || value === "") {
-    return contract?.status === "ANALYZED" ? "LOW" : "Pending analysis";
+  if (!contract?.overall_risk) {
+    return contract?.status === "ANALYZED" ? "Unavailable" : "Pending analysis";
   }
 
-  if (typeof value === "object") {
-    if (typeof value.score === "number") {
-      return `${value.score}`;
-    }
-
-    if (value.label) {
-      return value.label;
-    }
-
-    if (value.name) {
-      return value.name;
-    }
-
-    return "Risk detected";
-  }
-
-  return String(value);
+  return contract.overall_risk;
 };
 
 const ContractTable = ({
@@ -271,7 +245,7 @@ const ContractTable = ({
                   variant="outlined"
                 />
                 <Chip
-                  label={`${analysisData.findings?.length ?? 0} findings`}
+                  label={`${analysisData.contract?.findings_count ?? 0} findings`}
                   size="small"
                   variant="outlined"
                 />
