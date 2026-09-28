@@ -1,15 +1,15 @@
-import { handleResponse } from '../utils/helperMethods';
+import { handleResponse } from "../utils/helperMethods";
 
-const root = process.env.REACT_APP_API_ROOT_URL + '/contracts';
+const root = process.env.REACT_APP_API_ROOT_URL + "/contracts";
 export const uploadContract = async (file) => {
   const formData = new FormData();
-  formData.append('file', file);
+  formData.append("file", file);
 
   return handleResponse(
     await fetch(`${root}/upload`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
       body: formData,
     }),
@@ -24,20 +24,30 @@ export const getContracts = async ({ limit = 10, offset = 0 } = {}) => {
 
   return handleResponse(
     await fetch(`${root}?${params.toString()}`, {
-      method: 'GET',
+      method: "GET",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
   );
 };
 
+export const getContractAnalysis = async (contractId) =>
+  handleResponse(
+    await fetch(`${root}/${contractId}/analysis`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }),
+  );
+
 export const deleteContract = async (contractId) =>
   handleResponse(
     await fetch(`${root}/${contractId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     }),
   );

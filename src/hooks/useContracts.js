@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useState } from "react";
-import { deleteContract, getContracts, uploadContract } from "../api/contracts";
+import {
+  deleteContract,
+  getContractAnalysis,
+  getContracts,
+  uploadContract,
+} from "../api/contracts";
 import { TOAST_POSITIONS } from "../utils/constants";
 import { notifyError, notifySuccess } from "../utils/toastMethods";
 
@@ -102,6 +107,18 @@ const useContracts = ({ paginated = false } = {}) => {
     }
   };
 
+  const handleViewAnalysis = async (contractId) => {
+    try {
+      return await getContractAnalysis(contractId);
+    } catch (error) {
+      notifyError(
+        error.message || "Unable to load contract analysis.",
+        BOTTOM_RIGHT,
+      );
+      return null;
+    }
+  };
+
   return {
     contracts,
     isLoading,
@@ -113,6 +130,7 @@ const useContracts = ({ paginated = false } = {}) => {
     handleRowsPerPageChange,
     handleUpload,
     handleDelete,
+    handleViewAnalysis,
   };
 };
 

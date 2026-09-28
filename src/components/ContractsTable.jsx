@@ -3,8 +3,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import CircularProgress from "@mui/material/CircularProgress";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogTitle from "@mui/material/DialogTitle";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -40,7 +45,7 @@ const getContractRiskValue = (contract) => {
     null;
 
   if (value === null || value === undefined || value === "") {
-    return "Pending analysis";
+    return contract?.status === "ANALYZED" ? "LOW" : "Pending analysis";
   }
 
   if (typeof value === "object") {
@@ -72,9 +77,13 @@ const ContractTable = ({
   onPageChange,
   onRowsPerPageChange,
   onDeleteContract,
+  onViewAnalysis,
 }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedContract, setSelectedContract] = useState(null);
+  const [analysisModalOpen, setAnalysisModalOpen] = useState(false);
+  const [analysisLoading, setAnalysisLoading] = useState(false);
+  const [analysisData, setAnalysisData] = useState(null);
 
   const openMenu = (event, contract) => {
     setMenuAnchor(event.currentTarget);
@@ -86,14 +95,31 @@ const ContractTable = ({
     setSelectedContract(null);
   };
 
-  const handleAction = (action) => {
+  const closeAnalysisModal = () => {
+    setAnalysisModalOpen(false);
+    setAnalysisLoading(false);
+    setAnalysisData(null);
+  };
+
+  const handleAction = async (action) => {
     if (action === "Delete Contract") {
       onDeleteContract(selectedContract);
+    } else if (action === "View Analysis") {
+      if (!selectedContract || selectedContract.status !== "ANALYZED") {
+        closeMenu();
+        return;
+      }
+
+      setAnalysisLoading(true);
+      setAnalysisModalOpen(true);
+      closeMenu();
+
+      const result = await onViewAnalysis?.(selectedContract.id);
+      setAnalysisData(result || null);
+      setAnalysisLoading(false);
     } else {
       console.log(action, selectedContract);
     }
-
-    closeMenu();
   };
 
   return (
@@ -164,7 +190,7 @@ const ContractTable = ({
 
                   <TableCell>
                     <Typography variant="body2" color="text.secondary">
-                      -
+                      {contract.findings_count ?? "-"}
                     </Typography>
                   </TableCell>
 
@@ -206,11 +232,12 @@ const ContractTable = ({
         open={Boolean(menuAnchor)}
         onClose={closeMenu}
       >
-        {selectedContract?.status === "ANALYZED" && (
-          <MenuItem onClick={() => handleAction("View Analysis")}>
-            View Analysis
-          </MenuItem>
-        )}
+        <MenuItem
+          disabled={selectedContract?.status !== "ANALYZED"}
+          onClick={() => handleAction("View Analysis")}
+        >
+          View Analysis
+        </MenuItem>
         <MenuItem onClick={() => handleAction("Preview Contract")}>
           Preview Contract
         </MenuItem>
@@ -218,6 +245,118 @@ const ContractTable = ({
           Delete Contract
         </MenuItem>
       </Menu>
+
+      <Dialog
+        fullWidth
+        maxWidth="md"
+        onClose={closeAnalysisModal}
+        open={analysisModalOpen}
+      >
+        <DialogTitle>
+          {selectedContract?.name || "Contract analysis"}
+        </DialogTitle>
+
+        <DialogContent dividers>
+          {analysisLoading ? (
+            <Box sx={{ display: "flex", alignItems: "center", gap: 1.5 }}>
+              <CircularProgress size={18} />
+              <Typography variant="body2">Loading findings...</Typography>
+            </Box>
+          ) : analysisData ? (
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2.5 }}>
+              <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                <Chip
+                  label={`Overall risk: ${getContractRiskValue(analysisData.contract)}`}
+                  size="small"
+                  variant="outlined"
+                />
+                <Chip
+                  label={`${analysisData.findings?.length ?? 0} findings`}
+                  size="small"
+                  variant="outlined"
+                />
+              </Box>
+
+              {analysisData.findings?.length ? (
+                analysisData.findings.map((finding) => (
+                  <Box
+                    key={finding.id}
+                    sx={{
+                      border: "1px solid rgba(0,0,0,0.1)",
+                      borderRadius: 2,
+                      p: 2,
+                    }}
+                  >
+                    <Box
+                      sx={{ display: "flex", gap: 1, flexWrap: "wrap", mb: 1 }}
+                    >
+                      <Chip label={finding.type} size="small" />
+                      <Chip label={finding.severity} size="small" />
+                    </Box>
+
+                    <Typography fontWeight={700} gutterBottom>
+                      {finding.title}
+                    </Typography>
+
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      paragraph
+                    >
+                      {finding.explanation}
+                    </Typography>
+
+                    <Typography variant="body2" paragraph>
+                      <strong>Recommendation:</strong> {finding.recommendation}
+                    </Typography>
+
+                    {finding.evidence?.length > 0 && (
+                      <Box>
+                        <Typography variant="subtitle2" gutterBottom>
+                          Evidence
+                        </Typography>
+                        {finding.evidence.map((item, index) => (
+                          <Box
+                            key={`${finding.id}-evidence-${index}`}
+                            sx={{
+                              backgroundColor: "rgba(0,0,0,0.02)",
+                              borderRadius: 1,
+                              p: 1.5,
+                              mb: 1,
+                            }}
+                          >
+                            <Typography
+                              variant="caption"
+                              color="text.secondary"
+                            >
+                              Chunk {item.chunk_index}
+                            </Typography>
+                            <Typography variant="body2">
+                              {item.content}
+                            </Typography>
+                          </Box>
+                        ))}
+                      </Box>
+                    )}
+                  </Box>
+                ))
+              ) : (
+                <Typography variant="body2" color="text.secondary">
+                  No findings were generated for this contract.
+                </Typography>
+              )}
+            </Box>
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              Analysis is not available for this contract.
+            </Typography>
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closeAnalysisModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
 
       {showPagination && (
         <TablePagination
