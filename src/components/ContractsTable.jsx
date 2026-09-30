@@ -89,7 +89,9 @@ const ContractTable = ({
 
   const handleAction = async (action) => {
     if (action === "Delete Contract") {
-      onDeleteContract(selectedContract);
+      const contract = selectedContract;
+      closeMenu();
+      onDeleteContract(contract);
     } else if (action === "View Analysis") {
       if (!selectedContract || selectedContract.status !== "ANALYZED") {
         closeMenu();
