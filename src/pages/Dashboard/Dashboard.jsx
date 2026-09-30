@@ -65,7 +65,7 @@ const Dashboard = ({ view = "dashboard" }) => {
     handlePreviewContract,
   } = useContracts({ paginated: isContractsView });
 
-  const firstName = user?.firstName || "Alex";
+  const firstName = user?.firstName || "User";
 
   const handleFileSelected = async (event) => {
     const file = event.target.files?.[0];
@@ -138,7 +138,7 @@ const Dashboard = ({ view = "dashboard" }) => {
 
             <div>
               <strong>
-                {`${user?.firstName || "Alex"} ${user?.lastName || "Morgan"}`}
+                {`${user?.firstName || "User"} ${user?.lastName || ""}`}
               </strong>
 
               <span>Personal workspace</span>
