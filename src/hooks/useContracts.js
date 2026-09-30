@@ -3,6 +3,7 @@ import {
   deleteContract,
   getContractAnalysis,
   getContracts,
+  getContractPreview,
   uploadContract,
 } from "../api/contracts";
 import { TOAST_POSITIONS } from "../utils/constants";
@@ -119,6 +120,18 @@ const useContracts = ({ paginated = false } = {}) => {
     }
   };
 
+  const handlePreviewContract = async (contractId) => {
+    try {
+      return await getContractPreview(contractId);
+    } catch (error) {
+      notifyError(
+        error.message || "Unable to preview the contract.",
+        BOTTOM_RIGHT,
+      );
+      return null;
+    }
+  };
+
   return {
     contracts,
     isLoading,
@@ -131,6 +144,7 @@ const useContracts = ({ paginated = false } = {}) => {
     handleUpload,
     handleDelete,
     handleViewAnalysis,
+    handlePreviewContract,
   };
 };
 

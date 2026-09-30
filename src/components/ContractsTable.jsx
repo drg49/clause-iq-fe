@@ -52,12 +52,17 @@ const ContractTable = ({
   onRowsPerPageChange,
   onDeleteContract,
   onViewAnalysis,
+  onPreviewContract,
 }) => {
   const [menuAnchor, setMenuAnchor] = useState(null);
   const [selectedContract, setSelectedContract] = useState(null);
   const [analysisModalOpen, setAnalysisModalOpen] = useState(false);
   const [analysisLoading, setAnalysisLoading] = useState(false);
   const [analysisData, setAnalysisData] = useState(null);
+  const [previewContract, setPreviewContract] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState(null);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
 
   const openMenu = (event, contract) => {
     setMenuAnchor(event.currentTarget);
@@ -73,6 +78,13 @@ const ContractTable = ({
     setAnalysisModalOpen(false);
     setAnalysisLoading(false);
     setAnalysisData(null);
+  };
+
+  const closePreviewModal = () => {
+    setPreviewModalOpen(false);
+    setPreviewLoading(false);
+    setPreviewUrl(null);
+    setPreviewContract(null);
   };
 
   const handleAction = async (action) => {
@@ -91,6 +103,21 @@ const ContractTable = ({
       const result = await onViewAnalysis?.(selectedContract.id);
       setAnalysisData(result || null);
       setAnalysisLoading(false);
+    } else if (action === "Preview Contract") {
+      if (!selectedContract) {
+        closeMenu();
+        return;
+      }
+
+      const contract = selectedContract;
+      setPreviewContract(contract);
+      setPreviewLoading(true);
+      setPreviewModalOpen(true);
+      closeMenu();
+
+      const result = await onPreviewContract?.(contract.id);
+      setPreviewUrl(result?.preview_url || null);
+      setPreviewLoading(false);
     } else {
       console.log(action, selectedContract);
     }
@@ -329,6 +356,56 @@ const ContractTable = ({
 
         <DialogActions>
           <Button onClick={closeAnalysisModal}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        maxWidth="lg"
+        onClose={closePreviewModal}
+        open={previewModalOpen}
+      >
+        <DialogTitle>{previewContract?.name || "Contract preview"}</DialogTitle>
+
+        <DialogContent dividers sx={{ height: "75vh", p: 0 }}>
+          {previewLoading ? (
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                gap: 1.5,
+                height: "100%",
+              }}
+            >
+              <CircularProgress size={18} />
+              <Typography variant="body2">
+                Loading contract preview...
+              </Typography>
+            </Box>
+          ) : previewUrl ? (
+            <Box
+              component="iframe"
+              src={previewUrl}
+              title={`Preview of ${previewContract?.name || "contract"}`}
+              sx={{
+                border: 0,
+                display: "block",
+                height: "100%",
+                width: "100%",
+              }}
+            />
+          ) : (
+            <Box sx={{ p: 3 }}>
+              <Typography variant="body2" color="text.secondary">
+                Preview is not available for this contract.
+              </Typography>
+            </Box>
+          )}
+        </DialogContent>
+
+        <DialogActions>
+          <Button onClick={closePreviewModal}>Close</Button>
         </DialogActions>
       </Dialog>
 

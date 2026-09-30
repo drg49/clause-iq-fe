@@ -42,6 +42,16 @@ export const getContractAnalysis = async (contractId) =>
     }),
   );
 
+export const getContractPreview = async (contractId) =>
+  handleResponse(
+    await fetch(`${root}/${contractId}/preview`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
+    }),
+  );
+
 export const deleteContract = async (contractId) =>
   handleResponse(
     await fetch(`${root}/${contractId}`, {
